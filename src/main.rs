@@ -9,6 +9,10 @@ use serde::{Deserialize, Serialize};
 use shuttle_runtime::CustomError;
 use sqlx::{FromRow, PgPool};
 
+async fn hello_world() -> &'static str {
+    "hello world!"
+}
+
 async fn retrieve(
     Path(id): Path<i32>,
     State(state): State<MyState>,
@@ -54,6 +58,7 @@ async fn axum(
 
     let state = MyState { pool };
     let router = Router::new()
+        .route("/", get(hello_world))
         .route("/todos", post(add))
         .route("/todos/:id", get(retrieve))
         .with_state(state);
